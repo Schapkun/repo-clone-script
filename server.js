@@ -17,8 +17,8 @@ async function main() {
   console.log("📦 Installing dependencies...");
   execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
-  console.log("🚀 Starting Next.js app...");
-  spawn("npm", ["start"], {
+  console.log("🚀 Starting Next.js app in dev mode...");
+  spawn("npm", ["run", "dev"], {
     cwd: PREVIEW_DEST,
     stdio: "inherit",
     env: { ...process.env, PORT: process.env.PORT || 3000 },
