@@ -14,11 +14,8 @@ async function main() {
   console.log("📁 Copying preview_version to working directory...");
   fs.copySync(PREVIEW_SOURCE, PREVIEW_DEST, { overwrite: true });
 
-console.log("📦 Installing dependencies...");
-execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
-
-  console.log("🛠️ Building project...");
-  execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
+  console.log("📦 Installing dependencies...");
+  execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
   console.log("🚀 Starting Next.js app...");
   spawn("npm", ["start"], {
