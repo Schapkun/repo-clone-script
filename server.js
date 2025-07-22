@@ -17,8 +17,11 @@ async function main() {
   console.log("📦 Installing dependencies...");
   execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
-  console.log("📥 Installing TypeScript...");
-  execSync("npm install --save-dev typescript", { cwd: PREVIEW_DEST, stdio: "inherit" });
+  console.log("📥 Installing TypeScript + types...");
+  execSync("npm install --save-dev typescript @types/react @types/node", {
+    cwd: PREVIEW_DEST,
+    stdio: "inherit",
+  });
 
   console.log("🚀 Starting Next.js app in dev mode...");
   spawn("npm", ["run", "dev"], {
