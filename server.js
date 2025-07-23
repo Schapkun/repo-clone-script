@@ -1,4 +1,4 @@
-const { execSync, spawn } = require("child_process");
+1const { execSync, spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs-extra");
 
@@ -23,8 +23,10 @@ async function main() {
     stdio: "inherit",
   });
 
-  console.log("🚀 Starting Next.js app in dev mode...");
-  spawn("npm", ["run", "dev"], {
+  console.log("🚀 Starting Next.js app in production mode...");
+  execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
+
+  spawn("npm", ["start"], {
     cwd: PREVIEW_DEST,
     stdio: "inherit",
     env: { ...process.env, PORT: process.env.PORT || 3000 },
