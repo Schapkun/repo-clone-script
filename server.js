@@ -17,7 +17,7 @@ async function main() {
   console.log("📦 Installing dependencies...");
   execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
-  console.log("📥 Building Next.js project...");
+  console.log("🔧 Building Next.js project...");
   execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
   console.log("🚀 Starting Next.js app in production mode...");
