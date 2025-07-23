@@ -17,15 +17,10 @@ async function main() {
   console.log("📦 Installing dependencies...");
   execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
-  console.log("📥 Ensuring TypeScript + types are installed...");
-  execSync("npm install --save-dev typescript @types/react @types/node", {
-    cwd: PREVIEW_DEST,
-    stdio: "inherit",
-  });
-
-  console.log("🚀 Starting Next.js app in production mode...");
+  console.log("📥 Building Next.js project...");
   execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
+  console.log("🚀 Starting Next.js app in production mode...");
   spawn("npm", ["start"], {
     cwd: PREVIEW_DEST,
     stdio: "inherit",
