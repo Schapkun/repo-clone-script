@@ -17,7 +17,7 @@ async function main() {
   console.log("📦 Installing dependencies...");
   execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
-  console.log("📥 Installing TypeScript + types...");
+  console.log("📥 Ensuring TypeScript + types are installed...");
   execSync("npm install --save-dev typescript @types/react @types/node", {
     cwd: PREVIEW_DEST,
     stdio: "inherit",
