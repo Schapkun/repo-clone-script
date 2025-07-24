@@ -1,11 +1,20 @@
-const { execSync, spawn } = require("child_process");
+const { execSync } = require("child_process");
 const path = require("path");
 const fs = require("fs-extra");
+const express = require("express");
 
 const REPO_URL = "https://github.com/Schapkun/agent-action-atlas.git";
 const CLONE_DIR = path.join(__dirname, "github_repo");
 const PREVIEW_SOURCE = path.join(CLONE_DIR, "preview_version");
 const PREVIEW_DEST = path.join(__dirname, "preview_version");
+
+// Init Express server (moet buiten main!)
+const app = express();
+const PORT = process.env.PORT || 3000;
+app.use(express.static(PREVIEW_DEST));
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
 
 async function main() {
   console.log("🌀 Cloning project repo...");
@@ -25,13 +34,6 @@ async function main() {
 
   console.log("🔧 Building Next.js project...");
   execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
-
-  console.log("🚀 Starting app...");
-  spawn("npm", ["start"], {
-    cwd: PREVIEW_DEST,
-    stdio: "inherit",
-    env: { ...process.env, PORT: process.env.PORT || 3000 },
-  });
 }
 
 main();
