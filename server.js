@@ -10,37 +10,48 @@ const PREVIEW_SOURCE = path.join(CLONE_DIR, "preview_version");
 const PREVIEW_DEST = path.join(__dirname, "preview_version");
 
 async function main() {
-  console.log("🌀 Cloning project repo...");
-  execSync(`git clone ${REPO_URL} ${CLONE_DIR}`, { stdio: "inherit" });
+  try {
+    console.log("🌀 Cloning project repo...");
+    execSync(`git clone ${REPO_URL} ${CLONE_DIR}`, { stdio: "inherit" });
 
-  console.log("📁 Copying preview_version to working directory...");
-  fs.copySync(PREVIEW_SOURCE, PREVIEW_DEST, { overwrite: true });
+    console.log("📁 Copying preview_version to working directory...");
+    fs.copySync(PREVIEW_SOURCE, PREVIEW_DEST, { overwrite: true });
 
-  console.log("📦 Installing dependencies...");
-  execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
+    console.log("📦 Installing dependencies...");
+    execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
-  console.log("📥 Installing TypeScript + types...");
-  execSync("npm install --save-dev typescript @types/react @types/node", {
-    cwd: PREVIEW_DEST,
-    stdio: "inherit",
-  });
+    console.log("📥 Installing TypeScript + types...");
+    execSync("npm install --save-dev typescript @types/react @types/node", {
+      cwd: PREVIEW_DEST,
+      stdio: "inherit",
+    });
 
-  console.log("🔧 Building Next.js project...");
-  execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
+    console.log("🔧 Building Next.js project...");
+    execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
-  console.log("🚀 Starting Next.js server...");
+    console.log("🚀 Starting Next.js server...");
 
-  const app = express();
-  const port = process.env.PORT || 3000;
+    const app = express();
+    const port = process.env.PORT || 3000;
 
-  const nextApp = next({ dev: false, dir: PREVIEW_DEST });
-  const handle = nextApp.getRequestHandler();
+    const nextApp = next({ dev: false, dir: PREVIEW_DEST });
+    const handle = nextApp.getRequestHandler();
 
-  await nextApp.prepare();
-  app.all("*", (req, res) => handle(req, res));
-  app.listen(port, () => {
-    console.log(`✅ Ready on http://localhost:${port}`);
-  });
+    await nextApp.prepare();
+
+    app.all("*", (req, res) => {
+      console.log(`📩 Incoming request: ${req.method} ${req.url}`);
+      return handle(req, res);
+    });
+
+    app.listen(port, () => {
+      console.log(`✅ Server ready on http://localhost:${port}`);
+    });
+
+  } catch (error) {
+    console.error("❌ Fout tijdens opstarten:", error);
+    process.exit(1);
+  }
 }
 
 main();
