@@ -11,7 +11,6 @@ const PREVIEW_DEST = path.join(__dirname, "preview_version");
 
 async function main() {
   try {
-    // Verwijder oude repo indien aanwezig
     if (fs.existsSync(CLONE_DIR)) {
       console.log("♻️  Cleaning old repo clone...");
       fs.removeSync(CLONE_DIR);
@@ -23,7 +22,19 @@ async function main() {
     console.log("📁 Copying preview_version to working directory...");
     fs.copySync(PREVIEW_SOURCE, PREVIEW_DEST, { overwrite: true });
 
-    console.log("🚀 Initializing Next.js app early to open port...");
+    console.log("📦 Installing dependencies...");
+    execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
+
+    console.log("📥 Installing TypeScript + types...");
+    execSync("npm install --save-dev typescript @types/react @types/node", {
+      cwd: PREVIEW_DEST,
+      stdio: "inherit",
+    });
+
+    console.log("🔧 Building Next.js project...");
+    execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
+
+    console.log("🚀 Starting Next.js server...");
     const app = express();
     const port = process.env.PORT || 3000;
 
@@ -40,20 +51,6 @@ async function main() {
     app.listen(port, () => {
       console.log(`✅ Server ready on http://localhost:${port}`);
     });
-
-    // Na poort openen → rest van setup
-    console.log("📦 Installing dependencies...");
-    execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
-
-    console.log("📥 Installing TypeScript + types...");
-    execSync("npm install --save-dev typescript @types/react @types/node", {
-      cwd: PREVIEW_DEST,
-      stdio: "inherit",
-    });
-
-    console.log("🔧 Building Next.js project...");
-    execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
-
   } catch (error) {
     console.error("❌ Startup failed:", error);
     process.exit(1);
