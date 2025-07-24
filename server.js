@@ -11,7 +11,6 @@ const PREVIEW_DEST = path.join(__dirname, "preview_version");
 
 async function main() {
   try {
-    // Verwijder oude repo indien aanwezig
     if (fs.existsSync(CLONE_DIR)) {
       console.log("♻️  Cleaning old repo clone...");
       fs.removeSync(CLONE_DIR);
@@ -38,7 +37,7 @@ async function main() {
     console.log("🚀 Starting Next.js server...");
 
     const app = express();
-    const port = parseInt(process.env.PORT, 10); // 🔥 Render gebruikt deze exact
+    const port = process.env.PORT; // 🔥 Geen fallback!
 
     const nextApp = next({ dev: false, dir: PREVIEW_DEST });
     const handle = nextApp.getRequestHandler();
