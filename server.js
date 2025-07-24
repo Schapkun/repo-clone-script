@@ -31,8 +31,9 @@ async function main() {
       stdio: "inherit",
     });
 
-    console.log("🔧 Building Next.js project...");
+    console.log("🚧 Gaat nu echt build starten...");
     execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
+    console.log("✅ Build voltooid!");
 
     console.log("🚀 Starting Next.js server...");
     const app = express();
