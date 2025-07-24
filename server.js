@@ -38,7 +38,7 @@ async function main() {
     console.log("🚀 Starting Next.js server...");
 
     const app = express();
-    const port = process.env.PORT || 10000;
+    const port = parseInt(process.env.PORT, 10); // 🔥 Render gebruikt deze exact
 
     const nextApp = next({ dev: false, dir: PREVIEW_DEST });
     const handle = nextApp.getRequestHandler();
