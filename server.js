@@ -11,8 +11,14 @@ const PREVIEW_DEST = path.join(__dirname, "preview_version");
 
 async function main() {
   try {
+    // Verwijder oude repo indien aanwezig
+    if (fs.existsSync(CLONE_DIR)) {
+      console.log("♻️  Cleaning old repo clone...");
+      fs.removeSync(CLONE_DIR);
+    }
+
     console.log("🌀 Cloning project repo...");
-    execSync(`git clone ${REPO_URL} ${CLONE_DIR}`, { stdio: "inherit" });
+    execSync(`git clone --depth=1 ${REPO_URL} ${CLONE_DIR}`, { stdio: "inherit" });
 
     console.log("📁 Copying preview_version to working directory...");
     fs.copySync(PREVIEW_SOURCE, PREVIEW_DEST, { overwrite: true });
@@ -32,7 +38,7 @@ async function main() {
     console.log("🚀 Starting Next.js server...");
 
     const app = express();
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 10000;
 
     const nextApp = next({ dev: false, dir: PREVIEW_DEST });
     const handle = nextApp.getRequestHandler();
@@ -40,7 +46,7 @@ async function main() {
     await nextApp.prepare();
 
     app.all("*", (req, res) => {
-      console.log(`📩 Incoming request: ${req.method} ${req.url}`);
+      console.log(`📩 ${req.method} ${req.url}`);
       return handle(req, res);
     });
 
@@ -49,7 +55,7 @@ async function main() {
     });
 
   } catch (error) {
-    console.error("❌ Fout tijdens opstarten:", error);
+    console.error("❌ Startup failed:", error);
     process.exit(1);
   }
 }
