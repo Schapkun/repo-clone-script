@@ -22,18 +22,11 @@ async function main() {
     console.log("📁 Copying preview_version to working directory...");
     fs.copySync(PREVIEW_SOURCE, PREVIEW_DEST, { overwrite: true });
 
-    console.log("📦 Installing dependencies...");
-    execSync("npm install", { cwd: PREVIEW_DEST, stdio: "inherit" });
+    console.log("📦 Installing all dependencies including dev...");
+    execSync("npm install --include=dev", { cwd: PREVIEW_DEST, stdio: "inherit" });
 
-    console.log("📥 Installing TypeScript + types...");
-    execSync("npm install --save-dev typescript @types/react @types/node", {
-      cwd: PREVIEW_DEST,
-      stdio: "inherit",
-    });
-
-    console.log("🚧 Gaat nu echt build starten...");
+    console.log("🔧 Building Next.js project...");
     execSync("npm run build", { cwd: PREVIEW_DEST, stdio: "inherit" });
-    console.log("✅ Build voltooid!");
 
     console.log("🚀 Starting Next.js server...");
     const app = express();
